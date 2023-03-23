@@ -15,6 +15,7 @@ const Pagination = ({
 
   const renderPageNumbers = () => {
     const pageNumbers = [];
+
     for (let i = 1; i <= totalPages; i++) {
       pageNumbers.push(
         <li
@@ -23,18 +24,18 @@ const Pagination = ({
           onClick={() => onPageChange(i - 1)}
         >
           {i}
-        </li>
+        </li>,
       );
     }
+
     return pageNumbers;
   };
 
   return (
-    <div className="w-full flex justify-center">
+    <div className="flex w-full justify-center">
       <ul className="inline-flex gap-2">
         <li
-          className={`${currentPage === 0 ? "hidden" : ""
-            } cursor-pointer `}
+          className={`${currentPage === 0 ? "hidden" : ""} cursor-pointer `}
           onClick={() => onPageChange(currentPage - 1)}
         >
           &laquo;
@@ -47,7 +48,6 @@ const Pagination = ({
         >
           &raquo;
         </li>
-
       </ul>
     </div>
   );

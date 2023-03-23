@@ -1,13 +1,12 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
-import Select from 'react-select';
+import { useEffect, useState } from "react";
+import axios from "axios";
+import Select from "react-select";
 
-import Navigation from '../components/Navigation';
-import PublicationDetails from '../components/Publication';
-import Pagination from '../components/Pagination';
-import Spinner from '../components/Spinner';
-
-import { PublicationModel, UserModel } from '../models'
+import Navigation from "../components/Navigation";
+import PublicationDetails from "../components/Publication";
+import Pagination from "../components/Pagination";
+import Spinner from "../components/Spinner";
+import { PublicationModel, UserModel } from "../models";
 
 const PublicationDisplayPage = () => {
   const [publications, setPublications] = useState<PublicationModel[]>([]);
@@ -20,16 +19,18 @@ const PublicationDisplayPage = () => {
 
   useEffect(() => {
     const fetchPublications = async () => {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/posts');
+      const response = await axios.get("https://jsonplaceholder.typicode.com/posts");
+
       setPublications(response.data);
     };
 
     const fetchUsers = async () => {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+      const response = await axios.get("https://jsonplaceholder.typicode.com/users");
       const options = response.data.map((user: any) => ({
         value: user.id,
         label: user.name,
       }));
+
       setUsers(options);
     };
 
@@ -37,14 +38,19 @@ const PublicationDisplayPage = () => {
     fetchUsers();
   }, []);
 
-  const filteredPublications = publications
-    .filter((publication) => !selectedUser || publication.userId === selectedUser.value)
+  const filteredPublications = publications.filter(
+    (publication) => !selectedUser || publication.userId === selectedUser.value,
+  );
 
-  const displayPublications =
-    filteredPublications.slice(publicationsViewed, publicationsViewed + publicationsPerPage)
-      .map((publication) => (
-        <PublicationDetails key={publication.id} publication={publication} publishedBy={users.find((user: any) => user.value === publication.userId)?.label!} />
-      ));
+  const displayPublications = filteredPublications
+    .slice(publicationsViewed, publicationsViewed + publicationsPerPage)
+    .map((publication) => (
+      <PublicationDetails
+        key={publication.id}
+        publication={publication}
+        publishedBy={users.find((user: any) => user.value === publication.userId)?.label!}
+      />
+    ));
 
   const handlePageChange = (pageNumber: number) => {
     setPageNumber(pageNumber);
@@ -67,23 +73,27 @@ const PublicationDisplayPage = () => {
   return (
     <div>
       <Navigation />
-      <Select options={users} onChange={handleUserChange} isClearable={true}
-        placeholder='Select a user'
+      <Select
+        isClearable={true}
+        options={users}
+        placeholder="Select a user"
         styles={{
           option: (provided) => ({
             ...provided,
-            color: 'black',
-          })
+            color: "black",
+          }),
         }}
+        onChange={handleUserChange}
       />
       {displayPublications}
       <Pagination
         currentPage={pageNumber}
-        onPageChange={handlePageChange}
         publicationsPerPage={publicationsPerPage}
-        totalPublications={filteredPublications.length} />
+        totalPublications={filteredPublications.length}
+        onPageChange={handlePageChange}
+      />
     </div>
-  )
+  );
 };
 
 export default PublicationDisplayPage;

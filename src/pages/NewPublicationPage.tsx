@@ -1,12 +1,11 @@
-import React, { useState, useEffect } from 'react'
-import axios from 'axios'
+import React, { useState, useEffect } from "react";
+import axios from "axios";
 
-import Navigation from '../components/Navigation'
-
-import { PublicationModel, UserModel } from '../models'
+import Navigation from "../components/Navigation";
+import { PublicationModel, UserModel } from "../models";
 
 const NewPublicationPage = () => {
-  const [publication, setPublication] = useState<Omit<PublicationModel, 'id'>>({
+  const [publication, setPublication] = useState<Omit<PublicationModel, "id">>({
     userId: 0,
     title: "",
     body: "",
@@ -16,11 +15,12 @@ const NewPublicationPage = () => {
 
   useEffect(() => {
     const fetchUsers = async () => {
-      const response = await axios.get('https://jsonplaceholder.typicode.com/users');
+      const response = await axios.get("https://jsonplaceholder.typicode.com/users");
       const options = response.data.map((user: any) => ({
         value: user.id,
         label: user.name,
       }));
+
       setUsers(options);
     };
 
@@ -28,9 +28,10 @@ const NewPublicationPage = () => {
   }, []);
 
   const handleChange = (
-    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>
+    event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
   ) => {
     const { name, value } = event.target;
+
     setPublication((prevPublication) => ({
       ...prevPublication,
       [name]: value,
@@ -41,10 +42,8 @@ const NewPublicationPage = () => {
     event.preventDefault();
     setIsLoading(true);
     try {
-      const response = await axios.post(
-        "https://jsonplaceholder.typicode.com/posts",
-        publication
-      );
+      const response = await axios.post("https://jsonplaceholder.typicode.com/posts", publication);
+
       alert(JSON.stringify(response.data));
       setPublication({
         userId: 0,
@@ -60,15 +59,18 @@ const NewPublicationPage = () => {
   return (
     <>
       <Navigation />
-      <form onSubmit={handleSubmit} className="border rounded-lg p-3 my-3 w-96 mx-auto mt-5 flex-col">
-        <div className='flex flex-col my-3'>
+      <form
+        className="my-3 mx-auto mt-5 w-96 flex-col rounded-lg border p-3"
+        onSubmit={handleSubmit}
+      >
+        <div className="my-3 flex flex-col">
           <label htmlFor="userId">User:</label>
           <select
+            className="text-black"
             id="userId"
             name="userId"
             value={publication.userId}
             onChange={handleChange}
-            className="text-black"
           >
             <option value="0">Select a user</option>
             {users.map((user) => (
@@ -77,38 +79,38 @@ const NewPublicationPage = () => {
               </option>
             ))}
           </select>
-
         </div>
-        <div className='flex flex-col my-3'>
+        <div className="my-3 flex flex-col">
           <label htmlFor="title">Title:</label>
           <input
-            type="text"
+            className="text-black"
             id="title"
             name="title"
+            type="text"
             value={publication.title}
             onChange={handleChange}
-            className="text-black"
           />
         </div>
-        <div className='flex flex-col my-3'>
+        <div className="my-3 flex flex-col">
           <label htmlFor="body">Body:</label>
           <textarea
+            className="text-black"
             id="body"
             name="body"
             value={publication.body}
             onChange={handleChange}
-            className="text-black"
           />
         </div>
-        <button type="submit" className='bg-yellow-500 py-2 rounded w-full disabled:bg-yellow-200 text-black' disabled={
-          !publication.userId ||
-          !publication.title ||
-          !publication.body || isLoading}>
-          {isLoading ? 'Loading...' : "Submit"}
+        <button
+          className="w-full rounded bg-yellow-500 py-2 text-black disabled:bg-yellow-200"
+          disabled={!publication.userId || !publication.title || !publication.body || isLoading}
+          type="submit"
+        >
+          {isLoading ? "Loading..." : "Submit"}
         </button>
-      </form >
+      </form>
     </>
   );
 };
 
-export default NewPublicationPage
+export default NewPublicationPage;
