@@ -44,6 +44,8 @@ const NewPublicationPage = () => {
     try {
       const response = await axios.post("https://jsonplaceholder.typicode.com/posts", publication);
 
+      // Just showing the response from the server.
+      // Bear in mind that the server will not update the array of publications with the new publication.
       alert(JSON.stringify(response.data));
       setPublication({
         userId: 0,
@@ -51,7 +53,7 @@ const NewPublicationPage = () => {
         body: "",
       });
     } catch (error) {
-      console.error(error);
+      // console.error(error);
     }
     setIsLoading(false);
   };
