@@ -1,4 +1,4 @@
-export interface Publication {
+export interface PublicationModel {
   id: number;
   userId: number;
   title: string;

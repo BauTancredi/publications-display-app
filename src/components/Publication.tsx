@@ -1,5 +1,11 @@
+import { PublicationModel } from "../models";
 
-const Publication = ({ publication, publishedBy }) => {
+interface PublicationProps {
+  publication: PublicationModel
+  publishedBy: string;
+}
+
+const Publication = ({ publication, publishedBy }: PublicationProps) => {
   return (
     <>
       <div className='border rounded-lg p-3 my-3'>

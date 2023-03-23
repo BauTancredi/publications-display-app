@@ -1,23 +1,22 @@
 import { useEffect, useState } from 'react';
 import axios from 'axios';
-
 import Select from 'react-select';
 
-import { Publication } from '../models/Publication'
-import { User } from '../models/User'
 import Navigation from '../components/Navigation';
-import Spinner from '../components/Spinner';
 import PublicationDetails from '../components/Publication';
 import Pagination from '../components/Pagination';
+import Spinner from '../components/Spinner';
+
+import { PublicationModel, UserModel } from '../models'
 
 const PublicationDisplayPage = () => {
-  const [publications, setPublications] = useState<Publication[]>([]);
+  const [publications, setPublications] = useState<PublicationModel[]>([]);
   const [pageNumber, setPageNumber] = useState(0);
-  const [users, setUsers] = useState<User[]>([]);
-  const [selectedUser, setSelectedUser] = useState<null | User>(null);
+  const [users, setUsers] = useState<UserModel[]>([]);
+  const [selectedUser, setSelectedUser] = useState<null | UserModel>(null);
 
   const publicationsPerPage = 10;
-  const pagesVisited = pageNumber * publicationsPerPage;
+  const publicationsViewed = pageNumber * publicationsPerPage;
 
   useEffect(() => {
     const fetchPublications = async () => {
@@ -42,13 +41,10 @@ const PublicationDisplayPage = () => {
     .filter((publication) => !selectedUser || publication.userId === selectedUser.value)
 
   const displayPublications =
-    filteredPublications.slice(pagesVisited, pagesVisited + publicationsPerPage)
+    filteredPublications.slice(publicationsViewed, publicationsViewed + publicationsPerPage)
       .map((publication) => (
-        <PublicationDetails key={publication.id} publication={publication} publishedBy={users.find((user: any) => user.value === publication.userId)?.label} />
+        <PublicationDetails key={publication.id} publication={publication} publishedBy={users.find((user: any) => user.value === publication.userId)?.label!} />
       ));
-
-  const publicationsCount = filteredPublications.length;
-  const pageCount = Math.ceil(publicationsCount / publicationsPerPage);
 
   const handlePageChange = (pageNumber: number) => {
     setPageNumber(pageNumber);
@@ -68,11 +64,11 @@ const PublicationDisplayPage = () => {
     );
   }
 
-
   return (
     <div>
       <Navigation />
       <Select options={users} onChange={handleUserChange} isClearable={true}
+        placeholder='Select a user'
         styles={{
           option: (provided) => ({
             ...provided,
